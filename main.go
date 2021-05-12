@@ -39,6 +39,6 @@ func fib(n int) int  {
 		return r
 	}
 	sum:= fib(n-1) + fib(n-2)
-	cache:= sum
+	cache[n]= sum
 	return sum
 }
