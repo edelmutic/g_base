@@ -6,6 +6,14 @@ import (
 	"strconv"
 )
 
+var (
+	cache map[int]int
+)
+
+func init() {
+cache = make(map[int]int)	
+}
+
 
 func main() {
 	http.HandleFunc("/fib", handleFib)
