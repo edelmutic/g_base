@@ -1,46 +1,19 @@
 package main
 
 import (
-	"io"
+	"log"
+	"myserver"
 	"net/http"
-	"strconv"
 )
 
-var (
-	cache map[int]int
-)
-
-func init() {
-cache = make(map[int]int)	
-}
-
+const addr = "localhost:12345"
 
 func main() {
-	http.HandleFunc("/fib", handleFib)
-	http.ListenAndServe(":8080", nil)
-	
-
-	
-}
-
-func handleFib(w http.ResponseWriter, r *http.Request)  {
-	 num := r.FormValue("num")
-	 n, err := strconv.Atoi(num)
-	 if err != nil {
-http.Error(w, err.Error(), http.StatusBadRequest)
-return
-	 }
-	io.WriteString(w, strconv.Itoa(fib(n))) 
-}
-
-func fib(n int) int  {
-	if n <= 1 {
-		return n
-	}
-	if r, ok := cache[n]; ok  {
-		return r
-	}
-	sum:= fib(n-1) + fib(n-2)
-	cache[n]= sum
-	return sum
+	mux := http.NewServeMux()
+	handler := &myserver.MyHandler{}
+	mux.Handle("/favicon.ico", http.NotFoundHandler())
+	mux.Handle("/", handler)
+	log.Printf("Now listening on %s...\n", addr)
+	server := http.Server{Handler: mux, Addr: addr}
+	log.Fatal(server.ListenAndServe())
 }
